@@ -12,7 +12,21 @@ export const GifsApp = () => {
   }
 
   const handleSearch = (query: string) => {
-    console.log({ query });
+
+    query = query.trim().toLowerCase();
+
+    if (query.length === 0) return;
+
+    if (previousTerms.includes(query)) return;
+
+    setPreviousTerms(prev => {
+      const updated = [query, ...prev];
+      if (updated.length > 8) {
+        return updated.slice(0, 8);
+      }
+      return updated;
+    });
+  
   }
 
   return (
