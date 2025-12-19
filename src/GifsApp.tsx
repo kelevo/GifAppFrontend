@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { GifsList, PreviouSearches } from "./gifs/components"
-import { mockGifs } from "./mock-data/gifs.mock";
 import { CustomHeader, SearchBar } from "./shared/components"
+import { getGifsByQuery } from "./gifs/actions/get-gifs-by-query.action";
+import { Gif } from "./gifs/interfaces/gif.interface";
 
 export const GifsApp = () => {
 
-  const [previousTerms, setPreviousTerms] = useState(["gatitos"]);
+  const [previousTerms, setPreviousTerms] = useState<string[]>([]);
+  const [Gifs, setGifs] = useState<Gif[]>([]);
 
   const handleTermClicked = (term: string) => {
     console.log({ term });
   }
 
-  const handleSearch = (query: string) => {
+  const handleSearch = async (query: string) => {
 
     query = query.trim().toLowerCase();
 
@@ -26,6 +28,9 @@ export const GifsApp = () => {
       }
       return updated;
     });
+
+    const gifs = await getGifsByQuery(query);
+    setGifs(gifs);
   
   }
 
@@ -36,7 +41,7 @@ export const GifsApp = () => {
 
       <PreviouSearches searches={ previousTerms } onLabelClick={ handleTermClicked } />
 
-      <GifsList gifs={ mockGifs } />
+      <GifsList gifs={ Gifs } />
     </>
   )
 }
